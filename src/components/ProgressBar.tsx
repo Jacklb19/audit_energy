@@ -1,17 +1,51 @@
-"use client";                                                                                                                                                                   
+"use client"                                                                                                                                                                    
                                                                                                                                                                                 
-import { useEffect, useState } from "react";                                                                                                                                    
+type Props = {                                                                                                                                                                  
+  percent: number            // 0‑100                                                                                                                                           
+  label?: string                                                                                                                                                                
+}                                                                                                                                                                               
                                                                                                                                                                                 
-export default function ProgressBar() {                                                                                                                                         
-  const [progress, setProgress] = useState(0);                                                                                                                                  
-  useEffect(() => {                                                                                                                                                             
-    const onProg = (e: CustomEvent) => setProgress(e.detail);                                                                                                                   
-    window.addEventListener("procProgress", onProg as EventListener);                                                                                                           
-    return () => window.removeEventListener("procProgress", onProg as EventListener);                                                                                           
-  }, []);                                                                                                                                                                       
+export default function ProgressBar({ percent, label }: Props) {                                                                                                                
+  const safe = Math.min(100, Math.max(0, percent))                                                                                                                              
+                                                                                                                                                                                
   return (                                                                                                                                                                      
-    <div style={{ width: "100%", background: "#eee", height: "20px" }}>                                                                                                         
-      <div style={{ width: `${progress}%`, background: "#4caf50", height: "100%" }} />                                                                                          
+    <div style={{ width: "100%", padding: "4px 0" }}>                                                                                                                           
+      {label && (                                                                                                                                                               
+        <div style={{ marginBottom: 4, fontSize: "0.85rem", color: "#555" }}>                                                                                                   
+          {label}                                                                                                                                                               
+        </div>                                                                                                                                                                  
+      )}                                                                                                                                                                        
+      <div                                                                                                                                                                      
+        role="progressbar"                                                                                                                                                      
+        aria-valuenow={safe}                                                                                                                                                    
+        aria-valuemin={0}                                                                                                                                                       
+        aria-valuemax={100}                                                                                                                                                     
+        style={{                                                                                                                                                                
+          height: 12,                                                                                                                                                           
+          background: "#e0e0e0",                                                                                                                                                
+          borderRadius: 6,                                                                                                                                                      
+          overflow: "hidden",                                                                                                                                                   
+        }}                                                                                                                                                                      
+      >                                                                                                                                                                         
+        <div                                                                                                                                                                    
+          style={{                                                                                                                                                              
+            width: `${safe}%`,                                                                                                                                                  
+            height: "100%",                                                                                                                                                     
+            background: "#3b82f6",                                                                                                                                              
+            transition: "width 0.2s ease",                                                                                                                                      
+          }}                                                                                                                                                                    
+        />                                                                                                                                                                      
+      </div>                                                                                                                                                                    
+      <div                                                                                                                                                                      
+        style={{                                                                                                                                                                
+          marginTop: 4,                                                                                                                                                         
+          fontSize: "0.75rem",                                                                                                                                                  
+          textAlign: "right",                                                                                                                                                   
+          color: "#333",                                                                                                                                                        
+        }}                                                                                                                                                                      
+      >                                                                                                                                                                         
+        {safe.toFixed(1)} %                                                                                                                                                     
+      </div>                                                                                                                                                                    
     </div>                                                                                                                                                                      
-  );                                                                                                                                                                            
-}   
+  )                                                                                                                                                                             
+}  
